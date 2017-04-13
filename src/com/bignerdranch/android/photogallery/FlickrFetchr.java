@@ -16,7 +16,7 @@ public class FlickrFetchr {
 			InputStream in = connection.getInputStream();
 			
 			if(connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-				return null;
+				throw new IOException("http response not ok!");
 			}
 			
 			int bytesRead = 0;
