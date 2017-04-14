@@ -1,6 +1,9 @@
 package com.bignerdranch.android.photogallery;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -20,6 +23,7 @@ public class PhotoGalleryFragment extends Fragment {
 	private static final String TAG = "PhotoGalleryFragment";
 	GridView mGridView;
 	ArrayList<GalleryItem> mItems;
+	Map<String, Bitmap> photoCache = Collections.synchronizedMap(new HashMap<String, Bitmap>());
 	ThumbnailDownloader<ImageView> mThumbnailThread;
 
 	@Override
@@ -33,8 +37,8 @@ public class PhotoGalleryFragment extends Fragment {
 		mThumbnailThread.setListener(new ThumbnailDownloader.Listener<ImageView>() {
 
 			@Override
-			public void onThumbnailDownloaded(ImageView imageView, Bitmap thumbnail) {
-				
+			public void onThumbnailDownloaded(ImageView imageView, String url, Bitmap thumbnail) {
+				photoCache.put(url, thumbnail);
 				if(isVisible()) {
 					imageView.setImageBitmap(thumbnail);
 				}
@@ -113,10 +117,13 @@ public class PhotoGalleryFragment extends Fragment {
 			ImageView imageView = (ImageView)convertView
 					.findViewById(R.id.gallery_item_imageView);
 			
-			imageView.setImageResource(R.drawable.brian_up_close);
-			
 			GalleryItem item = getItem(position);
-			mThumbnailThread.queueThumbnail(imageView, item.getUrl());
+			if(photoCache.get(item.getUrl()) == null) { 
+				imageView.setImageResource(R.drawable.brian_up_close);						
+				mThumbnailThread.queueThumbnail(imageView, item.getUrl());
+			} else {
+				imageView.setImageBitmap(photoCache.get(item.getUrl()));
+			}
 			
 			return convertView;
 		}

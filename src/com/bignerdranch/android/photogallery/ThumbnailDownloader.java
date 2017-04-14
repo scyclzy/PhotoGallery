@@ -22,7 +22,7 @@ public class ThumbnailDownloader<Token> extends HandlerThread {
 	Listener<Token> mListener;
 	
 	public interface Listener<Token> {
-		void onThumbnailDownloaded(Token token, Bitmap thumbnail);
+		void onThumbnailDownloaded(Token token, String url, Bitmap thumbnail);
 	}
 	
 	public ThumbnailDownloader(Handler responseHandler) {
@@ -79,7 +79,7 @@ public class ThumbnailDownloader<Token> extends HandlerThread {
 					}
 					
 					requestMap.remove(token);
-					mListener.onThumbnailDownloaded(token, bitmap);
+					mListener.onThumbnailDownloaded(token, url, bitmap);
 				}
 				
 			});
