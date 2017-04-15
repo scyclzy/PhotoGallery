@@ -43,7 +43,6 @@ public class PhotoGalleryFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
 		setHasOptionsMenu(true);
-		updateItems();
 		
 		mThumbnailThread = new ThumbnailDownloader<ImageView>(new Handler());
 		mThumbnailThread.setListener(new ThumbnailDownloader.Listener<ImageView>() {
@@ -60,6 +59,7 @@ public class PhotoGalleryFragment extends Fragment {
 		mThumbnailThread.getLooper();
 		Log.i(TAG, "Background thread started");
 		
+		updateItems();
 	}
 
 
