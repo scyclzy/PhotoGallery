@@ -64,6 +64,7 @@ public class PhotoGalleryFragment extends Fragment {
 
 
 	public void updateItems() {
+		mThumbnailThread.clearQueue();
 		photoCache.clear();
 		new FetchItemsTask().execute();
 	}
