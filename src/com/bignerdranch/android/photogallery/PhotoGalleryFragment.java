@@ -5,10 +5,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -35,7 +37,7 @@ public class PhotoGalleryFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
 		setHasOptionsMenu(true);
-		new FetchItemsTask().execute();
+		updateItems();
 		
 		mThumbnailThread = new ThumbnailDownloader<ImageView>(new Handler());
 		mThumbnailThread.setListener(new ThumbnailDownloader.Listener<ImageView>() {
@@ -53,6 +55,13 @@ public class PhotoGalleryFragment extends Fragment {
 		Log.i(TAG, "Background thread started");
 		
 	}
+
+
+	public void updateItems() {
+		photoCache.clear();
+		new FetchItemsTask().execute();
+	}
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,
@@ -78,6 +87,11 @@ public class PhotoGalleryFragment extends Fragment {
 			getActivity().onSearchRequested();
 			return true;
 		case R.id.menu_item_clear:
+			PreferenceManager.getDefaultSharedPreferences(getActivity())
+				.edit()
+				.putString(FlickrFetchr.PREF_SEARCH_QUERY, null)
+				.commit();
+			updateItems();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -113,7 +127,13 @@ public class PhotoGalleryFragment extends Fragment {
 
 		@Override
 		protected ArrayList<GalleryItem> doInBackground(Void... params) {
-			String query = "android";
+			Activity activity = getActivity();
+			if(activity == null) {
+				return new ArrayList<GalleryItem>();
+			}
+			
+			String query = PreferenceManager.getDefaultSharedPreferences(activity)
+					.getString(FlickrFetchr.PREF_SEARCH_QUERY, null);
 			
 			if(query != null) {
 				return new FlickrFetchr().search(query);
