@@ -29,8 +29,9 @@ public class PhotoGalleryActivity extends SingleFragmentActivity {
 				.edit()
 				.putString(FlickrFetchr.PREF_SEARCH_QUERY, query)
 				.commit();
+						
+			fragment.updateItems();
 		}
-		
-		fragment.updateItems();
+
 	}
 }
