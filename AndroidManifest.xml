@@ -34,6 +34,7 @@
             </intent-filter>
             <meta-data android:resource="@xml/searchable" android:name="android.app.searchable"/>
         </activity>
+        <activity android:name=".PhotoPageActivity"></activity>
         <service android:name=".PollService"></service>
         <receiver android:name=".StartupReceiver">
             <intent-filter>
@@ -45,6 +46,7 @@
                 <action android:name="com.bignerdranch.android.photogallery.SHOW_NOTIFICATION"/>
             </intent-filter>
         </receiver>
+        
     </application>
 
 </manifest>
