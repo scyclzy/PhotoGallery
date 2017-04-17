@@ -22,6 +22,8 @@ public class PollService extends IntentService {
 	private static final int POLL_INTERVAL = 1000 * 15; // 15 seconds
 	
 	public static final String PREF_IS_ALARM_ON = "isAlarmOn";
+	public static final String ACTION_SHOW_NOTIFICATION = 
+			"com.bignerdranch.android.photogallery.SHOW_NOTIFICATION";
 
 	public PollService() {
 		super(TAG);
@@ -75,6 +77,7 @@ public class PollService extends IntentService {
 					getSystemService(NOTIFICATION_SERVICE);
 			
 			notificationManager.notify(0, notification);
+			sendBroadcast(new Intent(ACTION_SHOW_NOTIFICATION));
 		} else {
 			Log.i(TAG, "Got an old result: " + resultId);
 		}
